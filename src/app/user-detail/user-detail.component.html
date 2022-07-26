@@ -1,8 +1,11 @@
 <form #f="ngForm">
 <input type="hidden" name="id" [(ngModel)]="user.id">
-<div class="form-group">
+<div class="form-group col-sm-6">
   <label for="firstname">First name</label>
-  <input class="form-control" [(ngModel)]="user.name" name="firstname" id="firstname">
+  <input required minlength="3" #firstname="ngModel"  class="form-control" [(ngModel)]="user.name" name="firstname" id="firstname">
+  <div class="alert-danger" *ngIf="firstname.invalid">
+  The field first name is required.
+  </div>
 </div>
 <div class="form-group">
   <label for="lastname">Last name</label>
@@ -33,7 +36,7 @@
   <a class="btn btn-lg btn-outline-secondary  w-50" (click)="resetForm(f.form)">RESET</a>
   </div>
   <div class="col-md-4">
-  <a  class="btn btn-lg btn-success w-50 " (click)="saveUser()"> SAVE</a>
+  <button  [disabled]="f.invalid" class="btn btn-lg btn-success w-50 " (click)="saveUser()"> SAVE</button>
   </div>
 </div>
 </form>

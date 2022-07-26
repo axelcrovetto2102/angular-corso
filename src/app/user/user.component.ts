@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { User } from '../classes/User';
 
-import { faPencilAlt, faTrash, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 @Component({
   selector: 'tr[app-user]',
@@ -12,15 +12,12 @@ import { Router } from '@angular/router';
 })
 export class UserComponent implements OnInit {
 
-  @Input('user-data') user: User = new User();
+  @Input('user-data') user: User | undefined;
   @Output('onDeleteUser') userDeleted = new EventEmitter();
   @Output('onSelectUser') onSelectUser = new EventEmitter();
-
   faPen = faPencilAlt;
   faTrash = faTrash;
-  faInfo = faInfo;
-
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService, private route: Router) {
 
   }
 
@@ -32,14 +29,10 @@ export class UserComponent implements OnInit {
 
 
   }
-  showUserDetail() {
-    this.router.navigateByUrl('/users/' + this.user?.id);
-  }
   updateUser() {
     // this.route.navigateByUrl('/users/' + this.user?.id + '/edit');
     //this.route.navigate(['users', this.user?.id, 'edit']);
     //this.onSelectUser.emit(this.user);
 
   }
-
 }

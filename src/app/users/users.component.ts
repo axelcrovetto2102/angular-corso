@@ -1,13 +1,7 @@
-import { Router } from '@angular/router';
 
-import {
-  AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output,
-  QueryList, ViewChildren
-} from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../classes/User';
 import { UserService } from '../services/user.service';
-import { UserComponent } from '../user/user.component';
 
 
 @Component({
@@ -19,39 +13,22 @@ import { UserComponent } from '../user/user.component';
   ]
 })
 
-export class UsersComponent implements OnInit, AfterViewInit {
-  title = 'Users';
-  event$ = new BehaviorSubject(true);
-  public users$: Observable<User[]> = this.service.getUsers();
-
-
+export class UsersComponent implements OnInit {
+  title = 'Users'
+  public users: User[] = [];
   @Output('updateUser') updateUser = new EventEmitter<User>();
 
-  @ViewChildren(UserComponent, { read: ElementRef }) trs!: QueryList<ElementRef>
 
-  constructor(private service: UserService, private router: Router) {
+  constructor(private service: UserService) {
 
-
-  }
-  ngAfterViewInit(): void {
-    console.log('after view init', this.trs);
 
   }
-
   ngOnInit(): void {
 
-
+    this.users = this.service.getUsers();
   }
   onDeleteUser(user: User) {
-
-    this.service.deleteUser(user).subscribe(res => {
-      this.trs.forEach(ele => {
-        const el = ele.nativeElement;
-        if (Number(el.id) === user.id) {
-          el.parentNode.removeChild(el);
-        }
-      })
-    });
+    this.service.deleteUser(user);
   }
   onSelectUser(user: User) {
     const userCopy = Object.assign({}, user);

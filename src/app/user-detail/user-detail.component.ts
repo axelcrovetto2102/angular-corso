@@ -2,7 +2,7 @@ import { UserService } from './../services/user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../classes/User';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user-detail',
@@ -22,43 +22,32 @@ export class UserDetailComponent implements OnInit {
     return this.__user;
   }
 
-  constructor(private userService: UserService,
-    private route: ActivatedRoute,
-    private router: Router
-
-  ) {
+  constructor(private userService: UserService, private route: ActivatedRoute) {
     this.user = new User();
     this.__user = new User();
     this.usercopy = new User();
   }
 
   ngOnInit(): void {
-
     this.route.params.subscribe(param => {
-      if (param['id']) {
-        const id = Number(param.id); // '12'
-
-        this.userService.getUser(id)
-          .subscribe(user => this.user = user);
-
+      const id = Number(param.id); // '12'
+      const user = this.userService.getUser(id);
+      if (user) {
+        this.user = user;
       }
+
     });
   }
-
   saveUser() {
-    let obs;
 
     if (this.user.id > 0) {
-      obs = this.userService.updateUser(this.user);
+      this.userService.updateUser(this.user);
     }
     else {
-      obs = this.userService.createUser(this.user);
+      this.userService.createUser(this.user);
     }
-    obs.subscribe(resp => {
-      console.log('response', resp);
-      this.router.navigate(['users']);
-    });
-
+    // Let's unbind this.user from previously created/modified user
+    this.user = new User();
   }
   resetForm(form: FormGroup) {
 
@@ -69,5 +58,4 @@ export class UserDetailComponent implements OnInit {
     }
 
   }
-
 }
